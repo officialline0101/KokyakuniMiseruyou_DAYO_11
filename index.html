@@ -3465,51 +3465,61 @@ function createTreatmentContent(title, imageUrl, description, price, time) {
             fetchAvailability(currentDate);
         }
 
-        function showMenu(menu) {
-            // `treatment-text` を非表示にする
-            document.getElementById("treatment-text").style.display = "none";
+function showMenu(menu) {
+    // `treatment-text` を非表示にする
+    document.getElementById("treatment-text").style.display = "none";
 
-            // 選択されたメニューの名前を取得
-            let selectedButton = document.querySelector(`.menu-sections button[onclick="showMenu('${menu}')"]`);
-            if (selectedButton) {
-                selectedMenu = selectedButton.innerText;
-            }
+    // 選択されたメニューの名前を取得
+    let selectedButton = document.querySelector(`.menu-sections button[onclick="showMenu('${menu}')"]`);
+    if (selectedButton) {
+        selectedMenu = selectedButton.innerText;
+    }
 
-            // ✅ ローカルストレージにメニュー識別子を保存（追加）
-            localStorage.setItem('selectedMenu', menu); // ←この行を追加！
+    // ✅ ローカルストレージにメニュー識別子を保存
+    localStorage.setItem('selectedMenu', menu);
 
-            // すべてのメニューボタンの選択状態をリセット
-            document.querySelectorAll('.menu-sections button').forEach(button => {
-                button.classList.remove('active');
-            });
+    // すべてのメニューボタンの選択状態をリセット
+    document.querySelectorAll('.menu-sections button').forEach(button => {
+        button.classList.remove('active');
+    });
 
-            // 選択されたメニューセクションを表示
-            document.querySelectorAll('.menu-section').forEach(section => {
-                section.classList.remove('active');
-                section.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
-            });
+    // 選択されたメニューセクションを非表示リセット
+    document.querySelectorAll('.menu-section').forEach(section => {
+        section.classList.remove('active');
+        section.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+    });
 
-            // 対応するメニューボタンを選択状態にする
-            if (selectedButton) {
-                selectedButton.classList.add('active');
-            }
+    // 対応するメニューボタンを選択状態にする
+    if (selectedButton) {
+        selectedButton.classList.add('active');
+    }
 
-            // 選択されたメニューセクションを表示
-            document.getElementById(menu).classList.add('active');
+    // 選択されたメニューセクションを表示
+    const targetSection = document.getElementById(menu);
+    if (targetSection) {
+        targetSection.classList.add('active');
+    }
 
-            // `treatment-text` の内容をリセット
-            document.getElementById("treatment-text").innerHTML = "";
+    // `treatment-text` の内容をリセット
+    document.getElementById("treatment-text").innerHTML = "";
 
-            // メニューとオプションをリセット
-            selectedSymptom = '';      // メニューのリセット
-            irradiationsCount = '';    // オプションのリセット
-            menuPrice = 0;             // メニューの価格リセット
-            optionsPrice = 0;          // オプションの価格リセット
-            totalAmount = 0;           // 合計金額リセット
+    // メニューとオプションをリセット
+    selectedSymptom = '';
+    irradiationsCount = '';
+    menuPrice = 0;
+    optionsPrice = 0;
+    totalAmount = 0;
 
-            // 表示を更新
-            updateDisplayInfo();
-        }
+    // 表示を更新
+    updateDisplayInfo();
+
+    // ✅ スムーズスクロール追加部分 👇
+    if (targetSection) {
+        setTimeout(() => {
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 150); // 描画後に滑らかに移動
+    }
+}
 
         // ページ読み込み時にローカルストレージから選択状態を復元
         document.addEventListener("DOMContentLoaded", () => {
